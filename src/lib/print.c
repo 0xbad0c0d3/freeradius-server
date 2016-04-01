@@ -434,9 +434,6 @@ size_t vp_prints_value(char *out, size_t outlen, VALUE_PAIR const *vp, char quot
  */
 char *vp_aprints_value(TALLOC_CTX *ctx, VALUE_PAIR const *vp, char quote)
 {
-	size_t len, ret, inlen;
-	char *p = NULL;
-
 	VERIFY_VP(vp);
 
 	if (vp->type == VT_XLAT) {
