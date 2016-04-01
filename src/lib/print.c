@@ -439,25 +439,10 @@ char *vp_aprints_value(TALLOC_CTX *ctx, VALUE_PAIR const *vp, char quote)
 
 	VERIFY_VP(vp);
 
-	if(vp->type == VT_XLAT){
-		inlen = strlen(vp->value.xlat);
-		if (!quote) {
-			p = talloc_bstrndup(ctx, vp->value.xlat, inlen);
-			if (!p) return NULL;
-			talloc_set_type(p, char);
-			return p;
-		}
-		len = fr_prints_len(vp->value.xlat, inlen, quote);
-		p = talloc_array(ctx, char, len);
-		if (!p) return NULL;
-
-		ret = fr_prints(p, len, vp->value.xlat, inlen, quote);
-		if (!fr_assert(ret == (len - 1))) {
-			talloc_free(p);
-			return NULL;
-		}
-		return p;
+	if (vp->type == VT_XLAT) {
+		return fr_aprints(ctx, vp->value.xlat, talloc_array_length(vp->value.xlat) - 1, quote);
 	}
+
 	return value_data_aprints(ctx, vp->da->type, vp->da, &vp->data, vp->vp_length, quote);
 }
 
